@@ -8,37 +8,22 @@ const filter = document.getElementById('todos-filter');
 
 
 
-//Event Listeners 
-todoButton.addEventListener('click', todoAdd);
+//Event Listeners
+document.addEventListener('DOMContentLoaded', showLocalTodos);
+todoButton.addEventListener('click', todoAddFromInput);
 todoList.addEventListener('click', checkDelete);
 filter.addEventListener('change', filterToDos);
 
 
 //Functions 
-function todoAdd(event) {
+function todoAddFromInput(event) {
     event.preventDefault();
+    const inputValue = todoInput.value;
     //Check if inpute value is empty
-    if (!todoInput.value) return;
-    //Create todo DIV
-    const todoDiv = document.createElement('div');
-    todoDiv.classList.add('todo__item');
-    //Create LI
-    const newTodo = document.createElement('li');
-    newTodo.textContent = todoInput.value;
-    todoDiv.append(newTodo);
-    //CHECK Button 
-    const completeButton = document.createElement('button');
-    completeButton.innerHTML = '<i class="fas fa-check"></i>';
-    completeButton.classList.add('item__btn_complete', 'item__btn');
-    todoDiv.append(completeButton);
-    //Delete Button 
-    const deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-    deleteButton.classList.add('item__btn_trash', 'item__btn');
-    todoDiv.append(deleteButton);
-
-    todoList.append(todoDiv);
-
+    if (!inputValue) return;
+    //Save todo to local storage
+    saveToLocalStorage(inputValue);
+    todoAdd(inputValue);
     todoInput.value = '';
 }
 
@@ -92,4 +77,57 @@ function filterToDos() {
             })
     }
 }
+
+function saveToLocalStorage(todo) {
+    //Check if local storage has smth
+    let todos;
+    if (localStorage.getItem('todos') === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+    todos.push(todo);
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+function getTodos() {
+    if (!localStorage.getItem('todos')) {
+        console.log('localstorage is empty');
+        return;
+    }
+    //Return created before todo array
+    return JSON.parse(localStorage.getItem('todos'));;
+}
+
+
+function showLocalTodos() {
+    const Localtodos = getTodos();
+    //Check if localstorage has smth
+    if (!Localtodos) return;
+    Localtodos.forEach( (todo) => todoAdd(todo));
+}
+
+
+function todoAdd(value) {
+    //Create todo DIV
+    const todoDiv = document.createElement('div');
+    todoDiv.classList.add('todo__item');
+    //Create LI
+    const newTodo = document.createElement('li');
+    newTodo.textContent = value;
+    todoDiv.append(newTodo);
+    //CHECK Button 
+    const completeButton = document.createElement('button');
+    completeButton.innerHTML = '<i class="fas fa-check"></i>';
+    completeButton.classList.add('item__btn_complete', 'item__btn');
+    todoDiv.append(completeButton);
+    //Delete Button 
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteButton.classList.add('item__btn_trash', 'item__btn');
+    todoDiv.append(deleteButton);
+
+    todoList.append(todoDiv);
+}
+
 
