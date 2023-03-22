@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Reset and base styles  */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
 * {
@@ -103,6 +104,14 @@ body {
   min-height: 100vh;
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  border: none;
+}
+
 header {
   font-size: 2.5rem;
   font-weight: 700;
@@ -126,13 +135,14 @@ header {
   font-size: 2rem;
   border: none;
   background-color: #fff;
-  min-width: 40%;
+  border-radius: 0.5rem 0 0 0.5rem;
 }
 .todo__button {
   padding: 0.5rem;
   font-size: 2rem;
   border: none;
   background-color: #fff;
+  border-radius: 0 0.5rem 0.5rem 0;
   color: #ee6e49;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -140,6 +150,29 @@ header {
 .todo__button:hover {
   background-color: #ee6e49;
   color: white;
+}
+.todo__select {
+  overflow: hidden;
+  position: relative;
+  background-color: #fff;
+  margin: 1rem;
+  border-radius: 0.5rem;
+}
+.todo__select::after {
+  content: "▼";
+  position: absolute;
+  background: #ee6e49;
+  color: #fff;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+  pointer-events: none;
+}
+.todo__filter {
+  color: #ee6e49;
+  width: 12rem;
+  padding: 1rem;
+  cursor: pointer;
 }
 .todo__body {
   display: flex;
