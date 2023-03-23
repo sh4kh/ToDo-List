@@ -27,21 +27,56 @@ function todoAddFromInput(event) {
     todoInput.value = '';
 }
 
+//Create todo HTML element
+function todoAdd(value, isCompleted) {
+    //Create todo DIV
+    const todoDiv = document.createElement('div');
+    todoDiv.classList.add('todo__item');
+    if (isCompleted) {
+        todoDiv.classList.add('completed');
+    }
+    //Create LI
+    const newTodo = document.createElement('li');
+    newTodo.textContent = value;
+    todoDiv.append(newTodo);
+    //CHECK Button 
+    const completeButton = document.createElement('button');
+    completeButton.innerHTML = '<i class="fas fa-check"></i>';
+    completeButton.classList.add('item__btn_complete', 'item__btn');
+    todoDiv.append(completeButton);
+    //Delete Button 
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteButton.classList.add('item__btn_trash', 'item__btn');
+    todoDiv.append(deleteButton);
+
+    todoList.append(todoDiv);
+    return todoDiv;
+}
 
 function checkDelete(event) {
     const target = event.target;
+    const todo = target.parentElement;
+    const todoValue = todo.children[0].textContent;
     //Delete todo
     if (event.target.classList.contains('item__btn_trash')) {
-        const todo = target.parentElement;
         todo.classList.add('deleted');
+        removeLocalTodos(todoValue);
         todo.ontransitionend = function() {
             todo.remove();
         }
     }
     //Check todo
     if (event.target.classList.contains('item__btn_complete')) {
-        const todo = target.parentElement;
         todo.classList.toggle('completed');
+        //Check if todo is still completed. If yes we save it to localstorage by the 'completed' key else we delete it from storage
+        if (todo.classList.contains('completed')) {
+            saveCompletedToLocal(todoValue);
+        } else {
+            removeCompletedTodos(todoValue);
+            console.log('removeCompletedTodos');
+        }
+        
     }
 }
 
@@ -90,44 +125,60 @@ function saveToLocalStorage(todo) {
     localStorage.setItem('todos', JSON.stringify(todos));
 }
 
-function getTodos() {
-    if (!localStorage.getItem('todos')) {
-        console.log('localstorage is empty');
+function saveCompletedToLocal(todo) {
+    //Check if local storage has smth
+    let completed;
+    if (localStorage.getItem('completed') === null) {
+        completed = [];
+    } else {
+        completed = JSON.parse(localStorage.getItem('completed'));
+    }
+    completed.push(todo);
+    localStorage.setItem('completed', JSON.stringify(completed));
+}
+
+function getTodos(key) {
+    if (!localStorage.getItem(key) || JSON.parse(localStorage.getItem(key)).length === 0) {
+        console.log(`${key} localstorage is empty`);
         return;
     }
     //Return created before todo array
-    return JSON.parse(localStorage.getItem('todos'));;
+    return JSON.parse(localStorage.getItem(key));;
 }
 
 
 function showLocalTodos() {
-    const Localtodos = getTodos();
+    const localTodos = getTodos('todos');
+    const completedTodos = getTodos('completed');
+    let isCompleted;
+    
     //Check if localstorage has smth
-    if (!Localtodos) return;
-    Localtodos.forEach( (todo) => todoAdd(todo));
+    if (!localTodos) return;
+    localTodos.forEach( function(todo) {
+        if (completedTodos && completedTodos.includes(todo)) {
+            isCompleted = true;
+        } else {
+            isCompleted = false;
+        }
+        todoAdd(todo, isCompleted);
+    });
 }
 
-
-function todoAdd(value) {
-    //Create todo DIV
-    const todoDiv = document.createElement('div');
-    todoDiv.classList.add('todo__item');
-    //Create LI
-    const newTodo = document.createElement('li');
-    newTodo.textContent = value;
-    todoDiv.append(newTodo);
-    //CHECK Button 
-    const completeButton = document.createElement('button');
-    completeButton.innerHTML = '<i class="fas fa-check"></i>';
-    completeButton.classList.add('item__btn_complete', 'item__btn');
-    todoDiv.append(completeButton);
-    //Delete Button 
-    const deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-    deleteButton.classList.add('item__btn_trash', 'item__btn');
-    todoDiv.append(deleteButton);
-
-    todoList.append(todoDiv);
+function removeLocalTodos(todo) {
+    const localTodos = getTodos('todos');
+    //Check if localstorage has smth
+    if (!localTodos) return;
+    localTodos.splice(localTodos.indexOf(todo), 1);
+    localStorage.setItem('todos', JSON.stringify(localTodos));
 }
+
+function removeCompletedTodos(todo) {
+    const completedTodos = getTodos('completed');
+    //Check if localstorage has smth
+    if (!completedTodos) return;
+    completedTodos.splice(completedTodos.indexOf(todo), 1);
+    localStorage.setItem('completed', JSON.stringify(completedTodos));
+}
+
 
 
