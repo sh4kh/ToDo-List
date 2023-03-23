@@ -34,7 +34,8 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10vh;
+    margin-bottom: 5vh;
+    flex-wrap: wrap-reverse;
 }
 .todo {
 
@@ -89,6 +90,7 @@ header {
             width: 12rem;
             padding: 1rem;
             cursor: pointer;
+            justify-self: flex-start;
         }
 
 
@@ -114,7 +116,6 @@ header {
             justify-content: space-between;
             align-items: center;
             transition: all 0.5s ease;
-
 
             li {
                 flex: 1;
@@ -158,3 +159,38 @@ header {
     pointer-events: none;
 }
 
+
+@media (max-width: 1200px) {
+    .todo {
+        &__list {
+            width: 60%;
+        }
+    }
+}
+
+@media (max-width: 665px) {
+    .todo {
+        &__list {
+            width: 80%;
+        }
+    }
+}
+
+@media (max-width: 550px) {
+    .todo {
+        &__list {
+            width: 100%;
+        }
+        &__select {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width:456px) {
+    .todo {
+        &__input {
+            width: 85%;
+        }
+    }
+}

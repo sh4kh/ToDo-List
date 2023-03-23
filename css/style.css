@@ -127,7 +127,8 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10vh;
+  margin-bottom: 5vh;
+  flex-wrap: wrap-reverse;
 }
 
 .todo__input {
@@ -173,6 +174,7 @@ header {
   width: 12rem;
   padding: 1rem;
   cursor: pointer;
+  justify-self: flex-start;
 }
 .todo__body {
   display: flex;
@@ -228,4 +230,28 @@ header {
 
 .fa-trash, .fa-check {
   pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+  .todo__list {
+    width: 60%;
+  }
+}
+@media (max-width: 665px) {
+  .todo__list {
+    width: 80%;
+  }
+}
+@media (max-width: 550px) {
+  .todo__list {
+    width: 100%;
+  }
+  .todo__select {
+    width: 100%;
+  }
+}
+@media (max-width: 456px) {
+  .todo__input {
+    width: 85%;
+  }
 }
