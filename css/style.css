@@ -249,6 +249,9 @@ header {
   .todo__select {
     width: 100%;
   }
+  .todo__filter {
+    width: 30rem;
+  }
 }
 @media (max-width: 456px) {
   .todo__input {
